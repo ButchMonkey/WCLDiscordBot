@@ -6,41 +6,57 @@ var fs = require('fs');
 
 var bot = new Discord.Client();
 var isReady = false;
+var logs;
 
+//Configure the bot with a guild
 var guildName = "GUILDNAME";
 var serverName = "REALMNAME";
 var region = "EU";
+
+//https://www.warcraftlogs.com/accounts/changeuser
+//Bottom of the page
 var warcraftLogsApiKey = "WCLAPIKEY"
 
+//Use discord developer mode to get the channel id
 var notificationChannelId = "CHANNELID"
 
 var url = "https://www.warcraftlogs.com:443/v1/reports/guild/" + guildName + "/" + serverName + "/" + region + "?api_key=" + warcraftLogsApiKey;
 
-var logs;
+//Run every 60 seconds
+var interval = 60;
+
 setInterval(function() {
 	request.get({
 		url: url,
 		json: true,
 		headers: {'User-Agent': 'request'}
 	  }, (err, res, data) => {
-		if (err) {
+		if (err)
+		{
 			console.log('Error:', err);
-		} else if (res.statusCode !== 200) {
+		}
+		else if (res.statusCode !== 200)
+		{
 			console.log('Status:', res.statusCode);
-		} else {
+		}
+		else
+		{
 			// data is already parsed as JSON:
 			logs = data;
 
+			//Read the old logs and compare with new data
 			var oldLogs = fs.readFileSync('logs.json','utf8')
-			if (oldLogs !== JSON.stringify(logs)) {
+
+			if (oldLogs !== JSON.stringify(logs))
+			{
+				//Trigger and alert
 				postLogNotification(logs[logs.length-1]);
+				//Write new log data to "logs.json"
 				saveLogsToFile();
 			}
-
-
 		}
 	});
-},60000)
+}, interval * 1000)
 
 
 bot.on('ready', () => {
@@ -51,10 +67,10 @@ bot.on('ready', () => {
 function saveLogsToFile() {
 	console.log("Writing Logs to file ...")
 	fs.writeFile("logs.json", JSON.stringify(logs), function(err) {
-		if(err) {
+		if(err)
+		{
 			return console.log("File write error" + err);
 		}
-
 		console.log("File write successful");
 	});
 }
