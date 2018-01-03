@@ -1,0 +1,19 @@
+{
+  "name": "WCLDiscordBot",
+  "version": "1.0.0",
+  "description": "Creates an alert when a new log is uploaded",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bufferutil": "^3.0.2",
+    "discord.js": "^11.2.1",
+    "libsodium-wrappers": "^0.5.4",
+    "node-opus": "^0.2.7",
+    "opusscript": "0.0.3"
+  }
+}
